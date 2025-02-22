@@ -32,8 +32,9 @@ class Config:
         self._learning_rate = 0.001
         self._epochs = 20
         self._valdata_ratio = 0.2
-        self._width_transform=64
-        self._height_transform=64
+        self._width_transform=32
+        self._height_transform=32
+        self._dropout=0.5
 
     def _set_model_parameters(self):
         """Define model-specific parameters."""
@@ -68,7 +69,8 @@ class Config:
             "epochs": self._epochs,
             "valdata_ratio": self._valdata_ratio,
             "height_transform": self._height_transform,
-            "width_transform": self._width_transform
+            "width_transform": self._width_transform,
+            "drop_out":self._dropout
         }
 
     @property

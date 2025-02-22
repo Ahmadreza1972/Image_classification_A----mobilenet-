@@ -8,8 +8,8 @@ from test import Test
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from Models.CustomResNet18 import CustomResNet18
-from Config.config_model2 import Config
+from Models.mobilenet import MobileNetV2ForCIFAR8M
+from Config.config_model1 import Config
 from Log import Logger
 
 class ModelProcess:
@@ -24,7 +24,7 @@ class ModelProcess:
         self._save_graph=self._config1.directories["output_graph"]
         self._save_log=self._config1.directories["save_log"]
         
-        self._log=Logger(self._save_log,"model2")
+        self._log=Logger(self._save_log,"model1")
         
         # set hyperparameters
         self._batch_size = self._config1.hyperparameters["batch_size"]
@@ -33,7 +33,7 @@ class ModelProcess:
         self._valdata_ratio=self._config1.hyperparameters["valdata_ratio"]
         self._width_transform=self._config1.hyperparameters["width_transform"]
         self._height_transform=self._config1.hyperparameters["height_transform"]
-        
+        self._drop_out=self._config1.hyperparameters["drop_out"]
         
         # set parameters
         self._num_classes=self._config1.model_parameters["num_classes"]
@@ -74,9 +74,10 @@ class ModelProcess:
 
         # Initialize model
         self._log.log("Initializing the model...")
-        model = CustomResNet18(num_classes=self._num_classes, freeze_layers=False)
+        model=MobileNetV2ForCIFAR8M(self._num_classes,self._height_transform,self._width_transform,self._drop_out)
         trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-        self._log.log(f"Model initialized with {trainable_params:,} trainable parameters.")
+        num_layers = sum(1 for _ in model.modules())
+        self._log.log(f"Model initialized with {trainable_params:,} trainable parameters")
 
         # Log model architecture
         self._log.log(f"Model Architecture: \n{model}")
