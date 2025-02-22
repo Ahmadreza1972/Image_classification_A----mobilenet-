@@ -1,0 +1,23 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pth
+
+# Ignore environment folders
+venv/
+.env/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+.DS_Store  # macOS system file
+Thumbs.db  # Windows system file
+
+# Ignore specific folders
+/Data/      # Ignore entire data folder
+/models/    # Ignore trained models
