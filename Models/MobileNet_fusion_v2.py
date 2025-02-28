@@ -3,9 +3,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from torchvision.transforms.functional import to_pil_image
 import matplotlib.pyplot as plt
-
 from DataLoad import DataLoad
 from tqdm import tqdm
 import numpy as np
