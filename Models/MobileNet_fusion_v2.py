@@ -51,10 +51,10 @@ class ModelProcess:
         
         
         # set parameters
-        self._num_classes=self._config1.model_parameters["num_classes"]
+        self._num_classes=self._config1.model_parameters["num_classes"]+1
         self._device=self._config1.model_parameters["device"]
         self._results = pd.DataFrame(columns=["True label"])
-        self._orginal_labels=[[0,10,20,30,40],[1,11,21,31,41],[2,12,22,32,42]]
+        self._orginal_labels=[[0,10,20,30,40,6],[1,11,21,31,41,6],[2,12,22,32,42,6]]
 
     def save_result(self,img,act_label,pre_label,pic_num):
 
@@ -186,9 +186,9 @@ class ModelProcess:
 
         # Extract features from all models
         for row in range(len(model._results)):
-            pr1 = np.array(model._results.loc[row]["model 1 prp"])
-            pr2 = np.array(model._results.loc[row]["model 2 prp"])
-            pr3 = np.array(model._results.loc[row]["model 3 prp"])
+            pr1 = np.array(model._results.loc[row]["model 1 prp"][:-1])
+            pr2 = np.array(model._results.loc[row]["model 2 prp"][:-1])
+            pr3 = np.array(model._results.loc[row]["model 3 prp"][:-1])
 
             # Concatenate model probabilities as features
             X.append(np.concatenate([pr1, pr2, pr3]))
@@ -246,5 +246,5 @@ class ModelProcess:
             
 model=ModelProcess()
 model.models_output_colector()
-model.get_final_estimation()
-#model.get_final_estimation_bymax()
+#model.get_final_estimation()
+model.get_final_estimation_bymax()

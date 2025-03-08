@@ -15,9 +15,9 @@ class MobileNetV2ForCIFAR8M(nn.Module):
         # Keep only the first `num_layers_to_keep` layers of the feature extractor
         self.mobilenet_v2.features = nn.Sequential(
             self.mobilenet_v2.features[0],  # First conv layer (Conv2d + BN + ReLU6)
-            self.mobilenet_v2.features[1],  
-            self.mobilenet_v2.features[2],  
-            self.mobilenet_v2.features[3],  
+            self.mobilenet_v2.features[1],
+            self.mobilenet_v2.features[2],
+            self.mobilenet_v2.features[3],
             self.mobilenet_v2.features[4]
         )
         
@@ -34,7 +34,13 @@ class MobileNetV2ForCIFAR8M(nn.Module):
             nn.Linear(flattened_features, 512),  # Example: Intermediate layer size
             nn.ReLU(),
             nn.Dropout(self._drop_out),
-            nn.Linear(512, num_classes)  # Final layer matches the number of classes
+            nn.Linear(512, 256),  # Example: Intermediate layer size
+            nn.ReLU(),
+            nn.Dropout(self._drop_out),
+            nn.Linear(256, 128),  # Example: Intermediate layer size
+            nn.ReLU(),
+            nn.Dropout(self._drop_out),
+            nn.Linear(128, num_classes)  # Final layer matches the number of classes
         )
 
     def forward(self, x):
