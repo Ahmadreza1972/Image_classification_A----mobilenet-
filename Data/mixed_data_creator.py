@@ -11,10 +11,10 @@ from collections import Counter
 
 class mixedDataCreator():
     def __init__(self):
-        # just change the second item
-        self.con1=Config1(False,True)
-        self.con2=Config2(False,True)
-        self.con3=Config3(False,True)
+        # just change the second item to make MIX for normal group and super class group
+        self.con1=Config1(False,False)
+        self.con2=Config2(False,False)
+        self.con3=Config3(False,False)
         self.models=["model1","model2","model3"]
 
         self.train_pathes={"model1":self.con1.directories["train_path"],
@@ -23,12 +23,13 @@ class mixedDataCreator():
         self.test_paths={"model1":self.con1.directories["test_path"],
                       "model2":self.con2.directories["test_path"],
                       "model3":self.con3.directories["test_path"]}
+        path=self.con1.directories["data_dir"]
     
     def data_appender(self,item_excep,Mixed_data,Mixed_labels,Mixed_indices,path):
         for item_inc in self.models:
-            Loader = DataLoad(None, None,None, None, None, None)
+            Loader = DataLoad(None, None,None, None, None, None,path)
             if item_excep!=item_inc:
-                images, labels,indices =Loader.load_data(path[item_inc])
+                images, labels,indices, =Loader.load_data(path[item_inc])
                 class_num=list(Counter(labels).values())
                 # Choose 250 random indices without replacement
                 selected_indices = np.random.choice(len(indices), int(class_num[1]/2), replace=False)

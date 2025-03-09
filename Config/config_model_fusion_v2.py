@@ -2,7 +2,10 @@ import os
 import torch
 
 class Config:
-    def __init__(self):
+    def __init__(self,mixed,supper,method):
+        self._mixed_class_active=mixed
+        self._supper_clas_act=supper
+        self._method=method
         self._set_directories()
         self._set_hyperparameters()
         self._set_model_parameters()
@@ -14,17 +17,50 @@ class Config:
         self._DATA_DIR = os.path.join(self._BASE_DIR, "Data")
         self._OUTPUT_DIR = os.path.join(self._BASE_DIR, "Outputs")
         
-        self._MODEL1_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model1\\model1_weights.pth")
-        self._MODEL2_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model2\\model2_weights.pth")
-        self._MODEL3_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model3\\model3_weights.pth")
+        name=""
+        if self._supper_clas_act:
+            name=name+"supper"
+        else:
+            name=name+"normal"
+            
+        if self._mixed_class_active:
+            name=name+"/mixed"
+        else:
+            name=name+"/normal"
+            
+        self._MODEL1_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model1\\"+name+"\\model_weights.pth")
+        self._MODEL2_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model2\\"+name+"\\model_weights.pth")
+        self._MODEL3_WEIGHTS=os.path.join(self._OUTPUT_DIR, "model3\\"+name+"\\model_weights.pth")
 
         # Model directories
+        if self._mixed_class_active:
+            if self._supper_clas_act:
+                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
+                #self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/Mixed_suppermodel1_test.pth")
+                #self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/Mixed_suppermodel2_test.pth")
+                #self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/Mixed_suppermodel3_test.pth")
+            else:
+                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                #self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/Mixedmodel1_test.pth")
+                #self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/Mixedmodel2_test.pth")
+                #self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/Mixedmodel3_test.pth")
+        else:
+            if self._supper_clas_act:
+                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
+            else:
+                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                
         self._MODEL_DATA = os.path.join(self._DATA_DIR, "fusion/TaskB_fusion_test.pth")
-        self._MODEL1_DATA = os.path.join(self._DATA_DIR, "model1/model1_test.pth")
-        self._MODEL2_DATA = os.path.join(self._DATA_DIR, "model2/model2_test.pth")
-        self._MODEL3_DATA = os.path.join(self._DATA_DIR, "model3/model3_test.pth")
         self._GROUP_LABEL=os.path.join(self._DATA_DIR, "fusion/cifar100_classes.txt")
-        self._SAVE_LOG= os.path.join(self._OUTPUT_DIR, "fusion")
+        self._SAVE_LOG= os.path.join(self._OUTPUT_DIR, "fusion/"+self._method+"/"+name)
 
     def _set_hyperparameters(self):
         """Define all hyperparameters."""
