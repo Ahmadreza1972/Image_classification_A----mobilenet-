@@ -35,19 +35,35 @@ class Config:
         # Model directories
         if self._mixed_class_active:
             if self._supper_clas_act:
-                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
-                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
-                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
-                self._MODEL1_tst_DATA=None
-                self._MODEL2_tst_DATA=None
-                self._MODEL3_tst_DATA=None 
+                if self._method=="TrainMeta":
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_train_supercls.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_train_supercls.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_train_supercls.pth")  
+                    self._MODEL1_tst_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                    self._MODEL2_tst_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                    self._MODEL3_tst_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")  
+                else:
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
+                    self._MODEL1_tst_DATA=None
+                    self._MODEL2_tst_DATA=None
+                    self._MODEL3_tst_DATA=None              
             else:
-                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
-                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
-                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
-                self._MODEL1_tst_DATA=None
-                self._MODEL2_tst_DATA=None
-                self._MODEL3_tst_DATA=None 
+                if self._method=="TrainMeta":
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_train.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_train.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_train.pth")
+                    self._MODEL1_tst_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                    self._MODEL2_tst_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                    self._MODEL3_tst_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")                    
+                else:
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                    self._MODEL1_tst_DATA=None
+                    self._MODEL2_tst_DATA=None
+                    self._MODEL3_tst_DATA=None 
         else:
             if self._supper_clas_act:
                 if self._method=="TrainMeta":

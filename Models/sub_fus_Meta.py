@@ -105,7 +105,17 @@ class ByMetta(FusBaseModel):
         correct=0
         tot=0
         for i,item in enumerate(self._results[f"Meta_pr_label"]):
+            models=[0,1,2]
+            new_pr=[]
             pr_label=self._results[f"model {item+1} label"][i]
+            if ((pr_label==6)&(self._Mixed_Class_Activation)):
+                del models[item]
+                for l in models:
+                    if self._results[f"model {l+1} prp"][i]==6:
+                        new_pr.append(0)
+                    else:
+                        new_pr.append(max(self._results[f"model {l+1} prp"][i]))
+                pr_label=self._results[f"model {models[np.argmax(new_pr)]+1} label"][i]
             tr_label=self._results["True label"][i]
             if pr_label==tr_label:
                 correct+=1
@@ -162,5 +172,5 @@ class ByMetta(FusBaseModel):
             
             
             
-model=ByMetta(Mixed=False,Supper=True,method="TrainMeta",act_train=False)# --DS just work with mix data
+model=ByMetta(Mixed=True,Supper=False,method="TrainMeta",act_train=False)# --DS just work with mix data
 model.meta_model_output()
