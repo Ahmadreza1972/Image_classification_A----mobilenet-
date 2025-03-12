@@ -38,25 +38,47 @@ class Config:
                 self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
                 self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
                 self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
-                #self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/Mixed_suppermodel1_test.pth")
-                #self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/Mixed_suppermodel2_test.pth")
-                #self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/Mixed_suppermodel3_test.pth")
+                self._MODEL1_tst_DATA=None
+                self._MODEL2_tst_DATA=None
+                self._MODEL3_tst_DATA=None 
             else:
                 self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
                 self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
                 self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
-                #self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/Mixedmodel1_test.pth")
-                #self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/Mixedmodel2_test.pth")
-                #self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/Mixedmodel3_test.pth")
+                self._MODEL1_tst_DATA=None
+                self._MODEL2_tst_DATA=None
+                self._MODEL3_tst_DATA=None 
         else:
             if self._supper_clas_act:
-                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
-                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
-                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
+                if self._method=="TrainMeta":
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_train_supercls.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_train_supercls.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_train_supercls.pth")  
+                    self._MODEL1_tst_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                    self._MODEL2_tst_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                    self._MODEL3_tst_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")                  
+                else:
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test_supercls.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test_supercls.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test_supercls.pth")
+                    self._MODEL1_tst_DATA=None
+                    self._MODEL2_tst_DATA=None
+                    self._MODEL3_tst_DATA=None  
             else:
-                self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
-                self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
-                self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                if self._method=="TrainMeta":
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_train.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_train.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_train.pth")
+                    self._MODEL1_tst_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                    self._MODEL2_tst_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                    self._MODEL3_tst_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                else:
+                    self._MODEL1_DATA=os.path.join(self._DATA_DIR, "model1/model1_test.pth")
+                    self._MODEL2_DATA=os.path.join(self._DATA_DIR, "model2/model2_test.pth")
+                    self._MODEL3_DATA=os.path.join(self._DATA_DIR, "model3/model3_test.pth")
+                    self._MODEL1_tst_DATA=None
+                    self._MODEL2_tst_DATA=None
+                    self._MODEL3_tst_DATA=None
                 
         self._MODEL_DATA = os.path.join(self._DATA_DIR, "fusion/TaskB_fusion_test.pth")
         self._GROUP_LABEL=os.path.join(self._DATA_DIR, "fusion/cifar100_classes.txt")
@@ -64,14 +86,18 @@ class Config:
 
     def _set_hyperparameters(self):
         """Define all hyperparameters."""
-        self._batch_size = 1
-        self._learning_rate = 0.001
-        self._epochs = 20
+        if self._method=="TrainMeta":
+            self._batch_size = 64
+        else:
+            self._batch_size = 1
+        self._learning_rate = 0.0005
+        self._epochs = 200
         self._valdata_ratio = 0.2
         self._width_transform=32
         self._height_transform=32
-        self._dropout=0.5
-
+        self._dropout=0.9
+        self._weight_decay=0.00005
+        self._label_smoothing=0.7
     def _set_model_parameters(self):
         """Define model-specific parameters."""
         self._NUM_CLASSES = 5
@@ -89,6 +115,9 @@ class Config:
             "model1_data_path":self._MODEL1_DATA,
             "model2_data_path":self._MODEL2_DATA,
             "model3_data_path":self._MODEL3_DATA,
+            "model1_tst_data_path":self._MODEL1_tst_DATA,
+            "model2_tst_data_path":self._MODEL2_tst_DATA,
+            "model3_tst_data_path":self._MODEL3_tst_DATA,            
             "model1_weights": self._MODEL1_WEIGHTS,
             "model2_weights": self._MODEL2_WEIGHTS,
             "model3_weights": self._MODEL3_WEIGHTS,
@@ -106,7 +135,9 @@ class Config:
             "valdata_ratio": self._valdata_ratio,
             "height_transform": self._height_transform,
             "width_transform": self._width_transform,
-            "drop_out":self._dropout
+            "drop_out":self._dropout,
+            "weight_decay":self._weight_decay,
+            "label_smoothing":self._label_smoothing
         }
 
     @property

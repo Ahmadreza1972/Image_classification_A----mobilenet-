@@ -40,7 +40,7 @@ class DataLoad:
         remapped_labels = self.remap_labels(labels, class_mapping)
         labels = torch.tensor(remapped_labels).long()  # Convert labels to long tensor (for classification)
         dataset = TensorDataset(images, labels)
-        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True)
         return dataloader,unique_labels,unique_labels_str
 
     def image_label_maker(self,path,test):

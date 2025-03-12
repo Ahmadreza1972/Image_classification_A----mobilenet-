@@ -41,7 +41,7 @@ class Test:
                 inputs, labels = inputs.to(self._device), labels.to(self._device)
 
                 outputs = self._model(inputs)
-                loss = self._criterion(outputs, labels)
+                loss = self._criterion(outputs, labels.long())
                 running_loss += loss.item()
 
                 _, predicted = torch.max(outputs, 1)

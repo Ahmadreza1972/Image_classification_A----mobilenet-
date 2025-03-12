@@ -57,7 +57,7 @@ class Train:
                 self._optimizer.zero_grad()
                 # Forward pass
                 outputs = self._model(inputs)
-                loss = self._criterion(outputs, labels)
+                loss = self._criterion(outputs, labels.long())
                 # Backward pass and optimization
                 loss.backward()
                 self._optimizer.step()
@@ -78,7 +78,7 @@ class Train:
                 for inputs, labels in self._val_loader:
                     inputs, labels = inputs.to(self._device), labels.to(self._device)
                     outputs = self._model(inputs)
-                    loss = self._criterion(outputs, labels)
+                    loss = self._criterion(outputs, labels.long())
                     val_running_loss += loss.item()
                     _, predicted = torch.max(outputs, 1)
                     val_total += labels.size(0)
