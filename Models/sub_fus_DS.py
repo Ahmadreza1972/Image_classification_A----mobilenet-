@@ -3,6 +3,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from Models.fus_baseMosel import FusBaseModel
+import copy
 
 class ByDS(FusBaseModel):
     def __init__(self,Mixed,Supper,method):
@@ -64,9 +65,12 @@ class ByDS(FusBaseModel):
         data_iter = iter(self._dataloader)
         for row in range(len(self._results)):
             # Convert model outputs into mass functions
-            fusion=self.combine_beliefs(dict(zip(self._orginal_labels[0],self._results.loc[row]["model 1 prp"])), dict(zip(self._orginal_labels[1],self._results.loc[row]["model 2 prp"])))
-            fusion=self.combine_beliefs(fusion, dict(zip(self._orginal_labels[2],self._results.loc[row]["model 3 prp"])))
-            predictedlabel = max(fusion, key=fusion.get)
+            predictedlabel=self.recalculation(dict(zip(self._orginal_labels[0],self._results.loc[row]["model 1 prp"])),
+                               dict(zip(self._orginal_labels[1],self._results.loc[row]["model 2 prp"])),
+                               dict(zip(self._orginal_labels[2],self._results.loc[row]["model 3 prp"])))
+            #fusion=self.combine_beliefs(dict(zip(self._orginal_labels[0],self._results.loc[row]["model 1 prp"])), dict(zip(self._orginal_labels[1],self._results.loc[row]["model 2 prp"])))
+            #fusion=self.combine_beliefs(fusion, dict(zip(self._orginal_labels[2],self._results.loc[row]["model 3 prp"])))
+            #predictedlabel = max(fusion, key=fusion.get)
             true_labels=self._results.loc[row]["True label"]
             images, labels = next(data_iter)  # Fetch a batch
             image = images[row % len(images)]
@@ -77,6 +81,32 @@ class ByDS(FusBaseModel):
                 total_correct+=1
         accuracy=total_correct/total_row        
         self._log.log(f"Meta-Model Accuracy:{accuracy}" )
+    
+    #def recalculation(self,row1,row2,row3):
+    #    rows=[row1,row2,row3]
+    #    rows_cop=copy.deepcopy(rows)
+    #    for i,rowi in enumerate(rows):
+    #        if 6 in rowi.keys():
+    #            for j,rowj in enumerate(rows):
+    #                if i!=j:
+    #                    for jk in rowj.keys():
+    #                        if jk!=6:
+    #                            rows_cop[j][jk]+=(rowi[6]/2)*(rowj[jk]/(1-rowj[6]))
+    #        rows_cop[i][6]=0
+    #        print(sum(rows_cop[i].values()))
+
+    def recalculation(self,row1,row2,row3):
+        rows=[row1,row2,row3]
+        unknown=[]
+        max_pb_lb=[]
+        for i,rowi in enumerate(rows):
+            unknown.append(rowi[6])
+            max_pb_lb.append(max(rowi, key=rowi.get))
+        min=np.argmin(unknown)
+        predict=max_pb_lb[min]
+        return predict
+       
+            
       
 model=ByDS(Mixed=True,Supper=True,method="DS")# --DS just work with mix data
 model.models_output_colector()
